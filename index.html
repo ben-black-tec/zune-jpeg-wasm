@@ -13,35 +13,23 @@ SPDX-License-Identifier: MIT
 </body>
 
 <script type="module">
-  import {setup_decoder,decode_img} from './pkg/img_decoder.js'
+  import init, { decode_img } from "./pkg/img_decoder.js"
+  //import {setup_decoder,decode_img} from './pkg/img_decoder.js'
   let decoderwasm = undefined;
   let encoderwasm = undefined;
 
 
   function decodewasm(buf){
-    const out = decode_img(buf)
-    console.log(out)
-    return out
-    // const encodedBuffer = decoderwasm.getEncodedBuffer(buf.length);
-    // let begin = performance.now(); // performance.now() returns value in milliseconds
-    // encodedBuffer.set(buf);
-    // let end = performance.now();
-
-    // warmup decode
-    //decoderwasm.readHeader();
-
-
     // Decode
-    // const iterations = 10
-    // begin = performance.now(); // performance.now() returns value in milliseconds
-    // for(let i=0; i < iterations; i++) {
-    //   decoderwasm.decode();
-    //   var frameInfo = decoderwasm.getFrameInfo();
-    //   var decodedBuffer = decoderwasm.getDecodedBuffer();
-    // }
-    // end = performance.now();
-    // console.log("decode complete",decodedBuffer.byteLength,frameInfo.width,frameInfo.height,  end - begin)
-
+    const iterations = 10
+    var out
+    const begin = performance.now(); // performance.now() returns value in milliseconds
+    for(let i=0; i < iterations; i++) {
+       out = decode_img(buf)
+      }
+    const end = performance.now();
+    console.log("decode complete",out.length,  (end - begin)/iterations)
+      return out
     // frameInfo = decoderwasm.getFrameInfo();
 
     // Display image properties
@@ -65,7 +53,7 @@ SPDX-License-Identifier: MIT
   }
 
   window.onload = async function(){
-    await setup_decoder()
+    await init()
     fetch('test_img.jpeg').then((response)=>response.arrayBuffer()).then((buf)=>decodewasm(new Uint8Array(buf)))
 
   };

@@ -4,12 +4,11 @@ use zune_core::colorspace::ColorSpace;
 use js_sys;
 use wasm_bindgen::prelude::*;
 
-
 #[wasm_bindgen]
 pub fn decode_img(encoded_js: &js_sys::Uint8Array ) -> Result<js_sys::Uint8Array,String>  {
     let encoded = encoded_js.to_vec();
     let options: DecoderOptions = DecoderOptions::default().jpeg_set_out_colorspace(ColorSpace::RGBA);
-    let mut decoder = JpegDecoder::new_with_options(encoded, options);
+    let mut decoder = JpegDecoder::new_with_options(&encoded, options);
     let result = decoder.decode();
     match result{
         Ok(bytes)=>{
