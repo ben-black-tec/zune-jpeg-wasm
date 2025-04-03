@@ -1,0 +1,74 @@
+<!--
+Copyright (c) Chris Hafey.
+SPDX-License-Identifier: MIT
+-->
+<!DOCTYPE HTML>
+<html>
+<head>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>JPEG Baseline Decoding with WebAssembly</h1>
+</body>
+
+<script type="module">
+  import {setup_decoder,decode_img} from './pkg/img_decoder.js'
+  let decoderwasm = undefined;
+  let encoderwasm = undefined;
+
+
+  function decodewasm(buf){
+    const out = decode_img(buf)
+    console.log(out)
+    return out
+    // const encodedBuffer = decoderwasm.getEncodedBuffer(buf.length);
+    // let begin = performance.now(); // performance.now() returns value in milliseconds
+    // encodedBuffer.set(buf);
+    // let end = performance.now();
+
+    // warmup decode
+    //decoderwasm.readHeader();
+
+
+    // Decode
+    // const iterations = 10
+    // begin = performance.now(); // performance.now() returns value in milliseconds
+    // for(let i=0; i < iterations; i++) {
+    //   decoderwasm.decode();
+    //   var frameInfo = decoderwasm.getFrameInfo();
+    //   var decodedBuffer = decoderwasm.getDecodedBuffer();
+    // }
+    // end = performance.now();
+    // console.log("decode complete",decodedBuffer.byteLength,frameInfo.width,frameInfo.height,  end - begin)
+
+    // frameInfo = decoderwasm.getFrameInfo();
+
+    // Display image properties
+    // $('#status').text('OK');
+    // $('#resolution').text(''+frameInfo.width + 'x' + frameInfo.height);
+    // $('#pixelFormat').text(''+frameInfo.bitsPerSample +' bpp ' + (frameInfo.isSigned ? 'signed' : 'unsigned'));
+    // $('#componentCount').text(''+frameInfo.componentCount);
+
+    //$('#colorTransform').text('' + decoder.getColorSpace());
+
+    // Display Image
+    // $('#decodedSize').text(''+decodedBuffer.length.toLocaleString() + " bytes");
+    // $('#compressionRatio').text('' + (decodedBuffer.length /encodedBitStream.length).toFixed(2) + ":1");
+
+    // display(frameInfo, decodedBuffer, 2);
+    // frameInfo = decoder.getFrameInfo();
+  }
+  function main() {
+
+    //init('../../test/fixtures/j2k/CT1-0decomp.j2k');
+  }
+
+  window.onload = async function(){
+    await setup_decoder()
+    fetch('test_img.jpeg').then((response)=>response.arrayBuffer()).then((buf)=>decodewasm(new Uint8Array(buf)))
+
+  };
+  // main()
+</script>
+</html>
