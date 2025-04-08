@@ -5,6 +5,13 @@ use js_sys;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
+pub struct ImgDataMock {
+    width: u32,
+    height: u32,
+    data:js_sys::Uint8Array
+}
+
+#[wasm_bindgen]
 pub fn decode_img(encoded_js: &js_sys::Uint8Array ) -> Result<js_sys::Uint8Array,String>  {
     let encoded = encoded_js.to_vec();
     let options: DecoderOptions = DecoderOptions::default().jpeg_set_out_colorspace(ColorSpace::RGBA);

@@ -37,16 +37,15 @@ use zune_core::log::debug;
 use zune_core::options::DecoderOptions;
 
 use crate::decoder::IDCTPtr;
-use crate::idct::scalar::idct_int;
+// use crate::idct::scalar::idct_int;
 
 #[cfg(feature = "x86")]
 pub mod avx2;
 #[cfg(feature = "neon")]
 pub mod neon;
-//#[cfg(feature = "wasm")]
 pub mod wasm;
 
-pub mod scalar;
+// pub mod scalar;
 
 /// Choose an appropriate IDCT function
 #[allow(unused_variables)]
@@ -68,9 +67,16 @@ pub fn choose_idct_func(options: &DecoderOptions) -> IDCTPtr {
             return crate::idct::neon::idct_neon;
         }
     }
-    debug!("Using scalar integer IDCT");
-    // use generic one
-    return idct_int;
+    // #[cfg(target_arch = "wasm32")]
+    // {
+        // if options.use_neon() {
+            debug!("Using vector integer IDCT");
+            return crate::idct::wasm::idct_wasm;
+        // }
+    // }
+    // debug!("Using scalar integer IDCT");
+    // // use generic one
+    // return idct_int;
 }
 
 #[cfg(test)]

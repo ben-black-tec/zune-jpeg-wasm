@@ -30,7 +30,7 @@
   
  use core::arch::wasm32::*;
  
- use crate::unsafe_utils::{transpose, YmmRegister};
+ use crate::unsafe_utils_wasm::{transpose, YmmRegister};
  
  const SCALE_BITS: i32 = 512 + 65536 + (128 << 17);
  
@@ -52,19 +52,6 @@
      }
  }
  
- #[inline]
- #[target_feature(enable = "wasm")]
- unsafe fn pack_16(a: int32x4x2_t) -> int16x8_t {
-     vcombine_s16(vqmovn_s32(a.0), vqmovn_s32(a.1))
- }
- 
- #[inline]
- #[target_feature(enable = "wasm")]
- unsafe fn condense_bottom_16(a: int32x4x2_t, b: int32x4x2_t) -> int16x8x2_t {
-     int16x8x2_t(pack_16(a), pack_16(b))
- }
- 
- #[target_feature(enable = "wasm")]
  #[allow(
      clippy::too_many_lines,
      clippy::cast_possible_truncation,
@@ -122,7 +109,7 @@
                     .get_mut($pos..$pos + 8)
                     .unwrap()
                     .as_mut_ptr()
-                    .cast()) = $value
+                    .cast()) = $value;
                 $pos += stride;
              };
          }
@@ -215,58 +202,40 @@
  
      // This could potentially be reorganized to take advantage of the multi-register stores
      macro_rules! permute_store {
-         ($x:tt,$y:tt,$index:tt,$out:tt) => {
-             let a = condense_bottom_16($x, $y);
- 
-             // Clamp the values after packing, we can clamp more values at once
-             let b = clamp256_wasm(a);
- 
-             // store first vector
-             vst1q_s16(
-                 ($out)
+         ($x:tt,$index:tt,$out:tt) => {
+            let condensed16 = i16x8_narrow_i32x4($x.v0, $x.v1);
+            let clamped = clamp_wasm( condensed16);
+
+            * (($out)
                      .get_mut($index..$index + 8)
                      .unwrap()
                      .as_mut_ptr()
-                     .cast(),
-                 b.0
-             );
-             $index += stride;
-             // second vector
-             vst1q_s16(
-                 ($out)
-                     .get_mut($index..$index + 8)
-                     .unwrap()
-                     .as_mut_ptr()
-                     .cast(),
-                 b.1
-             );
+                     .cast()) = clamped;
+             
              $index += stride;
          };
      }
      // Pack and write the values back to the array
-     permute_store!((row0.mm256), (row1.mm256), pos, out_vector);
-     permute_store!((row2.mm256), (row3.mm256), pos, out_vector);
-     permute_store!((row4.mm256), (row5.mm256), pos, out_vector);
-     permute_store!((row6.mm256), (row7.mm256), pos, out_vector);
+     permute_store!((row0), pos, out_vector);
+     permute_store!((row1), pos, out_vector);
+     permute_store!((row2), pos, out_vector);
+     permute_store!((row3), pos, out_vector);
+     permute_store!((row4), pos, out_vector);
+     permute_store!((row5), pos, out_vector);
+     permute_store!((row6), pos, out_vector);
+     permute_store!((row7), pos, out_vector);
  }
  
  #[inline]
- #[target_feature(enable = "wasm")]
- unsafe fn clamp_wasm(reg: int16x8_t) -> int16x8_t {
-     let min_s = vdupq_n_s16(0);
-     let max_s = vdupq_n_s16(255);
- 
-     let max_v = vmaxq_s16(reg, min_s); //max(a,0)
-     let min_v = vminq_s16(max_v, max_s); //min(max(a,0),255)
+ unsafe fn clamp_wasm(reg: v128) -> v128 {
+     let min_s = i16x8_splat(0);
+     let max_s = i16x8_splat(255);
+
+     let max_v = i16x8_max(reg, min_s); //max(a,0)
+     let min_v = i16x8_min(max_v, max_s); //min(max(a,0),255)
      min_v
  }
- 
- #[inline]
- #[target_feature(enable = "wasm")]
- unsafe fn clamp256_wasm(reg: int16x8x2_t) -> int16x8x2_t {
-     int16x8x2_t(clamp_wasm(reg.0), clamp_wasm(reg.1))
- }
- 
+  
  #[cfg(test)]
  mod test {
      use super::*;
