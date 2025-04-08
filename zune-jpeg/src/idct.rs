@@ -43,6 +43,8 @@ use crate::idct::scalar::idct_int;
 pub mod avx2;
 #[cfg(feature = "neon")]
 pub mod neon;
+//#[cfg(feature = "wasm")]
+pub mod wasm;
 
 pub mod scalar;
 
