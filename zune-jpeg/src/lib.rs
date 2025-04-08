@@ -126,5 +126,6 @@ mod misc;
 mod unsafe_utils;
 mod unsafe_utils_avx2;
 mod unsafe_utils_neon;
+mod unsafe_utils_wasm;
 mod upsampler;
 mod worker;
