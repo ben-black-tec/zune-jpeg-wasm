@@ -201,9 +201,9 @@
     // note that u64_shr is for logical shift, which is what we want here, because
     // we are using shifting to swap around the 32 bit elements in the 64 bit vectors
     *v0 = v128_or(v128_and(w0, low_mask),i64x2_shl(w1, 32));
-    *v1 = v128_or(u64x2_shr(w1, 32),v128_and(w0, high_mask));
+    *v1 = v128_or(u64x2_shr(w0, 32),v128_and(w1, high_mask));
     *v2 = v128_or(v128_and(w2, low_mask),i64x2_shl(w3, 32));
-    *v3 = v128_or(u64x2_shr(w3, 32),v128_and(w2, high_mask));
+    *v3 = v128_or(u64x2_shr(w2, 32),v128_and(w3, high_mask));
  }
  
  /// Transpose an array of 8 by 8 i32
