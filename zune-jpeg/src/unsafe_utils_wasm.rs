@@ -186,10 +186,15 @@
     * even if more instructions generated
     */
     // flips the 64 bit blocks around with lane extraction (most reliable option I could find)
-    let w0 = i64x2_replace_lane::<1>(*v0, i64x2_extract_lane::<0>(*v2));
-    let w1 = i64x2_replace_lane::<1>(*v1, i64x2_extract_lane::<0>(*v3));
-    let w2 = i64x2_replace_lane::<0>(*v2, i64x2_extract_lane::<1>(*v0));
-    let w3 = i64x2_replace_lane::<0>(*v3, i64x2_extract_lane::<1>(*v1));
+    let w0 = i64x2(i64x2_extract_lane::<0>(*v0), i64x2_extract_lane::<0>(*v2));
+    let w1 = i64x2(i64x2_extract_lane::<0>(*v1), i64x2_extract_lane::<0>(*v3));
+    let w2 = i64x2(i64x2_extract_lane::<1>(*v0), i64x2_extract_lane::<1>(*v2));
+    let w3 = i64x2(i64x2_extract_lane::<1>(*v1), i64x2_extract_lane::<1>(*v3));
+
+    // let w0 = i64x2_replace_lane::<1>(*v0, i64x2_extract_lane::<0>(*v2));
+    // let w1 = i64x2_replace_lane::<1>(*v1, i64x2_extract_lane::<0>(*v3));
+    // let w2 = i64x2_replace_lane::<0>(*v2, i64x2_extract_lane::<1>(*v0));
+    // let w3 = i64x2_replace_lane::<0>(*v3, i64x2_extract_lane::<1>(*v1));
     // now use bit manipulations to do vertical swapping of the 32 bit blocks inside the 64 bit blocks
     let low_mask = i64x2_splat(0xffffffff);
     let high_mask = v128_not(low_mask);

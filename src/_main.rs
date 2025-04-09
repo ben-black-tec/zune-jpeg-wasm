@@ -6,6 +6,8 @@ use zune_jpeg::JpegDecoder;
 use zune_core::options::DecoderOptions;
 use zune_core::colorspace::ColorSpace;
 use std::time::Instant;
+use image::ImageReader;
+
 
 fn get_file_as_byte_vec(filename: &String) -> Vec<u8> {
     let mut f = File::open(&filename).expect("no file found");
@@ -34,4 +36,5 @@ fn main() {
     let _decoded4 = decode_img(&encoded_image);
     let elapsed = now.elapsed();
     println!("{} bytes, expected {}, decoded in {}ms",decoded.len(),1536*1536*4,elapsed.as_millis()/5);
+    image::save_buffer("zune-image-native.png", &decoded, 1536, 1536, image::ExtendedColorType::Rgba8).unwrap()
 }

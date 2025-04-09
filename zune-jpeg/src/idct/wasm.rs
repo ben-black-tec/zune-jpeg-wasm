@@ -92,39 +92,39 @@
      // Do another load for the first row, we don't want to check DC value, because
      // we only care about AC terms
      // TODO this should be a shift/shuffle, not a likely unaligned load
-     let row8 = YmmRegister::load(in_vector[1..].as_ptr().cast());
+    //  let row8 = YmmRegister::load(in_vector[1..].as_ptr().cast());
  
-     let or_tree = (((row1 | row8) | (row2 | row3)) | ((row4 | row5) | (row6 | row7)));
+    //  let or_tree = (((row1 | row8) | (row2 | row3)) | ((row4 | row5) | (row6 | row7)));
  
-     if or_tree.all_zero() {
-         // AC terms all zero, idct of the block is  is ( coeff[0] * qt[0] )/8 + 128 (bias)
-         // (and clamped to 255)
-         let clamped_16 = ((in_vector[0] >> 3) + 128).clamp(0, 255) as i16;
-         let idct_value = i16x8_splat(clamped_16);
+    //  if false && or_tree.all_zero() {
+    //      // AC terms all zero, idct of the block is  is ( coeff[0] * qt[0] )/8 + 128 (bias)
+    //      // (and clamped to 255)
+    //      let clamped_16 = ((in_vector[0] >> 3) + 128).clamp(0, 255) as i16;
+    //      let idct_value = i16x8_splat(clamped_16);
  
-         macro_rules! store {
-             ($pos:tt,$value:tt) => {
-                // store
-                *(out_vector
-                    .get_mut($pos..$pos + 8)
-                    .unwrap()
-                    .as_mut_ptr()
-                    .cast()) = $value;
-                $pos += stride;
-             };
-         }
-         store!(pos, idct_value);
-         store!(pos, idct_value);
-         store!(pos, idct_value);
-         store!(pos, idct_value);
+    //      macro_rules! store {
+    //          ($pos:tt,$value:tt) => {
+    //             // store
+    //             *(out_vector
+    //                 .get_mut($pos..$pos + 8)
+    //                 .unwrap()
+    //                 .as_mut_ptr()
+    //                 .cast()) = $value;
+    //             $pos += stride;
+    //          };
+    //      }
+    //      store!(pos, idct_value);
+    //      store!(pos, idct_value);
+    //      store!(pos, idct_value);
+    //      store!(pos, idct_value);
  
-         store!(pos, idct_value);
-         store!(pos, idct_value);
-         store!(pos, idct_value);
-         store!(pos, idct_value);
+    //      store!(pos, idct_value);
+    //      store!(pos, idct_value);
+    //      store!(pos, idct_value);
+    //      store!(pos, idct_value);
  
-         return;
-     }
+    //      return;
+    //  }
  
      macro_rules! dct_pass {
          ($SCALE_BITS:tt,$scale:tt) => {
