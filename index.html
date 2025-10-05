@@ -33,16 +33,18 @@ SPDX-License-Identifier: MIT
     const iterations = 10
     var out, out2
     // warm up decoding paths
-    decode_img(buf)
-    decode_jpeg(buf)
+    for(let i=0; i < iterations; i++) {
+      decode_img(buf)
+      decode_jpeg(buf)
+    }
     const begin = performance.now(); // performance.now() returns value in milliseconds
     for(let i=0; i < iterations; i++) {
-       out = decode_img(buf, true)
+       out = decode_img(buf, false).data
       }
     const end = performance.now();
     const begin2 = performance.now(); // performance.now() returns value in milliseconds
     for(let i=0; i < iterations; i++) {
-       out2 = decode_jpeg(buf)
+       out2 = decode_jpeg(buf).data
       }
     const end2 = performance.now();
     console.log("decode img complete",out.length,  (end - begin)/iterations)

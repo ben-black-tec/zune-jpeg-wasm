@@ -13,6 +13,7 @@ wasm-bindgen = "0.2.100"
 zune-jpeg = { path = "./zune-jpeg", version = "0.4.14" }
 zune-core = { path = "./zune-core", version = "0.4.11" }
 image = "0.25.8"
+web-sys = { version = "0.3.81", features = ["ImageData"]}
 
 
 [profile.release]
