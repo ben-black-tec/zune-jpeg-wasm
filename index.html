@@ -14,7 +14,7 @@ SPDX-License-Identifier: MIT
 </body>
 
 <script type="module">
-  import init, { decode_img } from "./pkg/img_decoder.js"
+  import init, { decode_img,decode_jpeg } from "./pkg/img_decoder.js"
   //import {setup_decoder,decode_img} from './pkg/img_decoder.js'
   let decoderwasm = undefined;
   let encoderwasm = undefined;
@@ -31,13 +31,31 @@ SPDX-License-Identifier: MIT
   function decodewasm(buf){
     // Decode
     const iterations = 10
-    var out
+    var out, out2
+    // warm up decoding paths
+    decode_img(buf)
+    decode_jpeg(buf)
     const begin = performance.now(); // performance.now() returns value in milliseconds
     for(let i=0; i < iterations; i++) {
-       out = decode_img(buf)
+       out = decode_img(buf, true)
       }
     const end = performance.now();
-    console.log("decode complete",out.length,  (end - begin)/iterations)
+    const begin2 = performance.now(); // performance.now() returns value in milliseconds
+    for(let i=0; i < iterations; i++) {
+       out2 = decode_jpeg(buf)
+      }
+    const end2 = performance.now();
+    console.log("decode img complete",out.length,  (end - begin)/iterations)
+    console.log("decode jpeg complete",out.length,  (end2 - begin2)/iterations)
+    let diffcount = 0, diffsum=0, difftot=0;
+    for(let i = 0; i < out.length; i++){
+      diffcount += (out[i] !== out2[i]) ? 1 : 0;
+      diffsum += Math.abs(out[i] - out2[i]);
+      difftot += out[i] - out2[i]
+    }
+    console.log("Diffcount", diffcount)
+    console.log("diffsum", diffsum)
+    console.log("difftot", difftot)
       return out
     // frameInfo = decoderwasm.getFrameInfo();
 
