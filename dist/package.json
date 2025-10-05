@@ -1,0 +1,15 @@
+{
+  "name": "img-decoder",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "img_decoder_bg.wasm",
+    "img_decoder.js",
+    "img_decoder.d.ts"
+  ],
+  "main": "img_decoder.js",
+  "types": "img_decoder.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
