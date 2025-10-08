@@ -212,6 +212,20 @@ export function decode_img(encoded_js, use_fast_jpeg) {
     return takeFromExternrefTable0(ret[0]);
 }
 
+/**
+ * @param {Array<any>} encoded_js
+ * @param {number} num_imgs_col
+ * @param {boolean} use_fast_jpeg
+ * @returns {ImageData}
+ */
+export function decode_pack_imgs(encoded_js, num_imgs_col, use_fast_jpeg) {
+    const ret = wasm.decode_pack_imgs(encoded_js, num_imgs_col, use_fast_jpeg);
+    if (ret[2]) {
+        throw takeFromExternrefTable0(ret[1]);
+    }
+    return takeFromExternrefTable0(ret[0]);
+}
+
 const EXPECTED_RESPONSE_TYPES = new Set(['basic', 'cors', 'default']);
 
 async function __wbg_load(module, imports) {
@@ -250,8 +264,22 @@ async function __wbg_load(module, imports) {
 function __wbg_get_imports() {
     const imports = {};
     imports.wbg = {};
-    imports.wbg.__wbg_getindex_61bb13d19869849b = function(arg0, arg1) {
+    imports.wbg.__wbg_get_0da715ceaecea5c8 = function(arg0, arg1) {
         const ret = arg0[arg1 >>> 0];
+        return ret;
+    };
+    imports.wbg.__wbg_instanceof_Uint8Array_9a8378d955933db7 = function(arg0) {
+        let result;
+        try {
+            result = arg0 instanceof Uint8Array;
+        } catch (_) {
+            result = false;
+        }
+        const ret = result;
+        return ret;
+    };
+    imports.wbg.__wbg_length_186546c51cd61acd = function(arg0) {
+        const ret = arg0.length;
         return ret;
     };
     imports.wbg.__wbg_length_6bb7e81f9d7713e4 = function(arg0) {
@@ -287,6 +315,12 @@ function __wbg_get_imports() {
         const len1 = WASM_VECTOR_LEN;
         getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
         getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
+    };
+    imports.wbg.__wbg_wbindgennumberget_f74b4c7525ac05cb = function(arg0, arg1) {
+        const obj = arg1;
+        const ret = typeof(obj) === 'number' ? obj : undefined;
+        getDataViewMemory0().setFloat64(arg0 + 8 * 1, isLikeNone(ret) ? 0 : ret, true);
+        getDataViewMemory0().setInt32(arg0 + 4 * 0, !isLikeNone(ret), true);
     };
     imports.wbg.__wbg_wbindgenthrow_451ec1a8469d7eb6 = function(arg0, arg1) {
         throw new Error(getStringFromWasm0(arg0, arg1));

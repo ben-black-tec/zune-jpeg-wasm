@@ -3,6 +3,7 @@
 export const memory: WebAssembly.Memory;
 export const decode_jpeg: (a: any) => [number, number, number];
 export const decode_img: (a: any, b: any) => [number, number, number];
+export const decode_pack_imgs: (a: any, b: any, c: any) => [number, number, number];
 export const __wbindgen_exn_store: (a: number) => void;
 export const __externref_table_alloc: () => number;
 export const __wbindgen_export_2: WebAssembly.Table;

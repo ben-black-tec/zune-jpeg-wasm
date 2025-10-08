@@ -2,6 +2,7 @@
 /* eslint-disable */
 export function decode_jpeg(encoded_js: Uint8Array): ImageData;
 export function decode_img(encoded_js: Uint8Array, use_fast_jpeg: boolean): ImageData;
+export function decode_pack_imgs(encoded_js: Array<any>, num_imgs_col: number, use_fast_jpeg: boolean): ImageData;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
@@ -9,6 +10,7 @@ export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly decode_jpeg: (a: any) => [number, number, number];
   readonly decode_img: (a: any, b: any) => [number, number, number];
+  readonly decode_pack_imgs: (a: any, b: any, c: any) => [number, number, number];
   readonly __wbindgen_exn_store: (a: number) => void;
   readonly __externref_table_alloc: () => number;
   readonly __wbindgen_export_2: WebAssembly.Table;

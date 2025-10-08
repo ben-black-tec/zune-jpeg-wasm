@@ -14,7 +14,7 @@ SPDX-License-Identifier: MIT
 </body>
 
 <script type="module">
-  import init, { decode_img,decode_jpeg } from "./pkg/img_decoder.js"
+  import init, { decode_img,decode_jpeg,decode_pack_imgs } from "./pkg/img_decoder.js"
   //import {setup_decoder,decode_img} from './pkg/img_decoder.js'
   let decoderwasm = undefined;
   let encoderwasm = undefined;
@@ -31,7 +31,7 @@ SPDX-License-Identifier: MIT
   function decodewasm(buf){
     // Decode
     const iterations = 10
-    var out, out2, rawimg
+    var out, out2, rawimg, out3
     // warm up decoding paths
     for(let i=0; i < iterations; i++) {
       decode_img(buf)
@@ -47,8 +47,14 @@ SPDX-License-Identifier: MIT
        out2 = decode_jpeg(buf).data
       }
     const end2 = performance.now();
+    const begin3 = performance.now(); // performance.now() returns value in milliseconds
+    for(let i=0; i < iterations; i++) {
+      out3 = decode_pack_imgs([buf, buf, buf, buf], 2, true)
+      }
+    const end3 = performance.now();
     console.log("decode img complete",out.length,  (end - begin)/iterations)
-    console.log("decode jpeg complete",out.length,  (end2 - begin2)/iterations)
+    console.log("decode jpeg complete",out2.length,  (end2 - begin2)/iterations)
+    console.log("decode jpeg packed complete",out3.length,  (end3 - begin3)/iterations)
     let diffcount = 0, diffsum=0, difftot=0;
     for(let i = 0; i < out.length; i++){
       diffcount += (out[i] !== out2[i]) ? 1 : 0;
