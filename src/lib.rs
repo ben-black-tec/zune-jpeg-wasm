@@ -63,3 +63,10 @@ pub fn decode_img(
         Ok(img_data)
     }
 }
+#[wasm_bindgen]
+pub fn decode_pack_imgs(
+    encoded_js: &js_sys::Array<js_sys::Uint8Array>,
+    use_fast_jpeg: &js_sys::Boolean,
+) -> Result<ImageData, String> {
+
+}

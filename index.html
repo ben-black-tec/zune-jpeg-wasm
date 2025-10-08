@@ -31,11 +31,11 @@ SPDX-License-Identifier: MIT
   function decodewasm(buf){
     // Decode
     const iterations = 10
-    var out, out2
+    var out, out2, rawimg
     // warm up decoding paths
     for(let i=0; i < iterations; i++) {
       decode_img(buf)
-      decode_jpeg(buf)
+      rawimg = decode_jpeg(buf)
     }
     const begin = performance.now(); // performance.now() returns value in milliseconds
     for(let i=0; i < iterations; i++) {
@@ -58,6 +58,7 @@ SPDX-License-Identifier: MIT
     console.log("Diffcount", diffcount)
     console.log("diffsum", diffsum)
     console.log("difftot", difftot)
+    console.log("bytes per pixel", out.length / (rawimg.width * rawimg.height))
       return out
     // frameInfo = decoderwasm.getFrameInfo();
 

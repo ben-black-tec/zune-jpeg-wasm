@@ -3,12 +3,12 @@
   "type": "module",
   "version": "0.1.0",
   "files": [
-    "img_decoder_bg.wasm",
-    "img_decoder.js",
-    "img_decoder.d.ts"
+    "./dist/img_decoder_bg.wasm",
+    "./dist/img_decoder.js",
+    "./dist/img_decoder.d.ts"
   ],
-  "main": "img_decoder.js",
-  "types": "img_decoder.d.ts",
+  "main": "./dist/img_decoder.js",
+  "types": "./dist/img_decoder.d.ts",
   "sideEffects": [
     "./snippets/*"
   ]
