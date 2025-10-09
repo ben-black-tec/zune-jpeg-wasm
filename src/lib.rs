@@ -85,7 +85,7 @@ fn pack_imgs_rs(decodedImgs: &[RsImg], num_imgs_col: usize) -> Result<RsImg, Str
                 || (xidx != num_imgs_col - 1 && img_width != mainWidth)
                 || (yidx != num_rows - 1 && img_height != mainHeight))
             {
-                return Err(format!("Invalid grid. Images of inconsistent size. xidx: {xidx:?}, yidx: {yidx:?}, img_width: {img_width:?}, img_height: {img_height:?}, mainWidth: {mainWidth:?}, mainHeight: {mainHeight:?}, lastWidth: {lastWidth:?}, lastHeight: {lastHeight:?}"));
+                return Err(format!("Invalid grid. Images of inconsistent size. num_rows:{num_rows:?}, num_imgs_col:{num_imgs_col:?} xidx: {xidx:?}, yidx: {yidx:?}, img_width: {img_width:?}, img_height: {img_height:?}, mainWidth: {mainWidth:?}, mainHeight: {mainHeight:?}, lastWidth: {lastWidth:?}, lastHeight: {lastHeight:?}"));
             }
             // number of channels
             const nC: usize = 4;
