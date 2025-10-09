@@ -19,12 +19,12 @@ SPDX-License-Identifier: MIT
   let decoderwasm = undefined;
   let encoderwasm = undefined;
 
-  function draw_decoded(imgbytes){
+  function draw_decoded(imgdata){
     let canvas = document.getElementById("canv")
-    canvas.width = 1536
-    canvas.height = 1536
+    canvas.width = imgdata.width
+    canvas.height = imgdata.height
     let ctx = canvas.getContext("2d")
-    const imgdata = new ImageData(new Uint8ClampedArray(imgbytes.buffer), 1536,1536)
+    // const imgdata = new ImageData(new Uint8ClampedArray(imgbytes.buffer), 1536*2,1536*2)
     ctx.putImageData(imgdata,0,0)
   }
 
@@ -65,7 +65,7 @@ SPDX-License-Identifier: MIT
     console.log("diffsum", diffsum)
     console.log("difftot", difftot)
     console.log("bytes per pixel", out.length / (rawimg.width * rawimg.height))
-      return out
+      return out3
     // frameInfo = decoderwasm.getFrameInfo();
 
     // Display image properties

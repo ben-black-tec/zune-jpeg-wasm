@@ -87,12 +87,14 @@ fn pack_imgs_rs(decodedImgs: &[RsImg], num_imgs_col: usize) -> Result<RsImg, Str
             {
                 return Err(format!("Invalid grid. Images of inconsistent size. xidx: {xidx:?}, yidx: {yidx:?}, img_width: {img_width:?}, img_height: {img_height:?}, mainWidth: {mainWidth:?}, mainHeight: {mainHeight:?}, lastWidth: {lastWidth:?}, lastHeight: {lastHeight:?}"));
             }
-            let offset: usize = yidx * mainHeight * xTotSize * 4 + xidx * mainWidth * 4;
+            // number of channels
+            const nC: usize = 4;
+            let offset: usize = yidx * mainHeight * xTotSize * nC + xidx * mainWidth * nC;
             for y in 0..img_height {
-                let y_src_offset = offset + y * xTotSize;
-                let y_dest_offset = y * img_width;
-                combinedImg[y_src_offset..y_src_offset + img_width]
-                    .copy_from_slice(&img.data[y_dest_offset..y_dest_offset + img_width]);
+                let y_src_offset = offset + y * xTotSize * nC;
+                let y_dest_offset = y * img_width * nC;
+                combinedImg[y_src_offset..y_src_offset + img_width * nC]
+                    .copy_from_slice(&img.data[y_dest_offset..y_dest_offset + img_width * nC]);
             }
         }
     }
